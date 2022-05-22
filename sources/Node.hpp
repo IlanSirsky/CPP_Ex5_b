@@ -31,5 +31,40 @@ namespace ariel
 
         Node() : _parent(nullptr) {}
         Node(std::string val) : _value(std::move(val)), _parent(nullptr) {}
+
+        ~Node()
+        {
+            for (Node *node : this->_children)
+            {
+                delete node;
+            }
+        }   
+
+        Node(const Node &node){
+            this->_value = node._value;
+            this->_parent = node._parent;
+            this->_children = node._children;
+        }
+
+        Node &operator=(const Node &node){
+            if (&node != this)
+            {
+                this->_value = node._value;
+                this->_parent = node._parent;
+                this->_children = node._children;
+            }
+            return *this;
+        }
+
+        Node(Node &&node) noexcept : _value(std::move(node._value)),
+                                    _children(std::move(node._children)),
+                                    _parent(node._parent) {} 
+
+        Node &operator=(Node &&node) noexcept {
+            this->_value = node._value;
+            this->_parent = node._parent;
+            this->_children = node._children;
+            return *this;
+        }
     };
 }

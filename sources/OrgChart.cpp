@@ -5,7 +5,7 @@ using namespace std;
 namespace ariel
 {
     // OrgChart functions
-    Node *OrgChart::find(std::string val)
+    Node *OrgChart::find(const std::string &val)
     {
         if (this->_root == nullptr)
         {
@@ -15,7 +15,7 @@ namespace ariel
     }
 
     // https://stackoverflow.com/questions/20735708/how-to-get-an-element-in-n-ary-trees
-    Node *OrgChart::find(std::string val, Node *currentNode)
+    Node *OrgChart::find(const std::string &val, Node *currentNode)
     {
         if (currentNode == nullptr)
         {
@@ -39,7 +39,7 @@ namespace ariel
     // https://www.geeksforgeeks.org/print-n-ary-tree-graphically/
     void OrgChart::printChart(std::ostream &os, const Node *node, vector<bool> flag, int depth) const
     {
-        if (!node)
+        if (node == nullptr)
         {
             return;
         }
@@ -67,21 +67,39 @@ namespace ariel
         flag[(size_t)depth] = true;
     }
 
-    OrgChart::~OrgChart()
+    OrgChart::OrgChart(const OrgChart &chart)
     {
-        std::queue<Node *> toRemove;
-        for (auto it = this->begin(); it != this->end(); ++it)
-        {
-            toRemove.push(&it.Node());
-        }
-        while (!toRemove.empty())
-        {
-            delete toRemove.front();
-            toRemove.pop();
-        }
+        this->_root = chart._root;
     }
 
-    OrgChart &OrgChart::add_root(string val)
+    OrgChart::OrgChart(OrgChart &&chart) noexcept
+    {
+        this->_root = chart._root;
+        chart._root = nullptr;
+    }
+
+    OrgChart &OrgChart::operator=(const OrgChart &chart)
+    {
+        if (&chart != this)
+        {
+            this->_root = chart._root;
+        }
+        return *this;
+    }
+
+    OrgChart &OrgChart::operator=(OrgChart &&chart) noexcept
+    {
+        this->_root = chart._root;
+        chart._root = nullptr;
+        return *this;
+    }
+
+    OrgChart::~OrgChart()
+    {
+        delete this->_root;
+    }
+
+    OrgChart &OrgChart::add_root(const string & val)
     {
         if (this->_root == nullptr)
         {
@@ -91,7 +109,7 @@ namespace ariel
         return *this;
     }
 
-    OrgChart &OrgChart::add_sub(string parent, string sub)
+    OrgChart &OrgChart::add_sub(const string & parent, const string & sub)
     {
         Node *parentNode = find(parent);
         if (parentNode == nullptr)
@@ -103,7 +121,7 @@ namespace ariel
     }
 
     // https://www.geeksforgeeks.org/number-children-given-node-n-ary-tree/
-    size_t numberOfChildren(Node *root, string x)
+    size_t numberOfChildren(Node *root, const string & x)
     {
         size_t numChildren = 0;
         if (root == NULL)
@@ -124,8 +142,9 @@ namespace ariel
                     numChildren = numChildren + p->_children.size();
                     return numChildren;
                 }
-                for (size_t i = 0; i < p->_children.size(); i++)
+                for (size_t i = 0; i < p->_children.size(); i++){
                     q.push(p->_children[i]);
+                }
                 n--;
             }
         }

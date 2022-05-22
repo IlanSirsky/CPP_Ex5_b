@@ -16,9 +16,9 @@ namespace ariel
     private:
         Node *_root = nullptr;
 
-        Node *find(std::string val);
+        Node *find(const std::string &val);
 
-        Node *find(std::string val, Node *currentNode);
+        Node *find(const std::string &val, Node *currentNode);
 
         void printChart(std::ostream &os, const Node *node, std::vector<bool> flag, int depth = 0) const;
 
@@ -27,19 +27,19 @@ namespace ariel
     public:
         OrgChart() : _root(nullptr) {}
 
-        OrgChart(OrgChart &chart) = default;
+        OrgChart(const OrgChart &chart);
 
-        OrgChart(OrgChart &&chart) noexcept = default;
+        OrgChart(OrgChart &&chart) noexcept;
 
-        OrgChart &operator=(OrgChart chart);
+        OrgChart &operator=(const OrgChart &chart);
 
         OrgChart &operator=(OrgChart &&chart) noexcept;
     
         ~OrgChart();
 
-        OrgChart &add_root(std::string val);
+        OrgChart &add_root(const std::string &val);
 
-        OrgChart &add_sub(std::string parent, std::string sub);
+        OrgChart &add_sub(const std::string &parent,const std::string & sub);
 
         friend std::ostream &operator<<(std::ostream &os, const OrgChart &chart);
 
@@ -244,13 +244,17 @@ namespace ariel
         {
             if (this->_root == nullptr)
             {
-                return iterator(nullptr, iterator::Order::LEVELORDER);
+                throw std::invalid_argument("Empty OrgChart");           
             }
             return iterator(_root, _root, iterator::Order::LEVELORDER);
         }
 
-        iterator static end_level_order()
+        iterator end_level_order()
         {
+            if (this->_root == nullptr)
+            {
+                throw std::invalid_argument("Empty OrgChart");
+            }
             return iterator(nullptr, iterator::Order::LEVELORDER);
         }
 
@@ -258,27 +262,36 @@ namespace ariel
         {
             if (this->_root == nullptr)
             {
-                return iterator(nullptr, iterator::Order::REVERSEORDER);
+                throw std::invalid_argument("Empty OrgChart");
             }
             return iterator(this->_root, iterator::Order::REVERSEORDER);
         }
 
-        iterator static reverse_order()
+        iterator reverse_order()
         {
+            if (this->_root == nullptr)
+            {
+                throw std::invalid_argument("Empty OrgChart");
+            }
             return iterator(nullptr, iterator::Order::REVERSEORDER);
         }
 
         iterator begin_preorder()
         {
+            
             if (this->_root == nullptr)
             {
-                return iterator(nullptr, iterator::Order::PREORDER);
+                throw std::invalid_argument("Empty OrgChart");
             }
             return iterator(this->_root, iterator::Order::PREORDER);
         }
 
-        iterator static end_preorder()
+        iterator end_preorder()
         {
+            if (this->_root == nullptr)
+            {
+                throw std::invalid_argument("Empty OrgChart");
+            }
             return iterator(nullptr, iterator::Order::PREORDER);
         }
 
@@ -286,7 +299,7 @@ namespace ariel
         {
             return this->begin_level_order();
         }
-        iterator static end()
+        iterator end()
         {
             return iterator(nullptr, iterator::Order::LEVELORDER);
         }
