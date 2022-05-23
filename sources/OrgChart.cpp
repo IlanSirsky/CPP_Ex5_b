@@ -5,7 +5,7 @@ using namespace std;
 namespace ariel
 {
     // OrgChart functions
-    Node *OrgChart::find(const std::string &val)
+    Node *OrgChart::find(const std::string &val) // find a node by name
     {
         if (this->_root == nullptr)
         {
@@ -15,19 +15,19 @@ namespace ariel
     }
 
     // https://stackoverflow.com/questions/20735708/how-to-get-an-element-in-n-ary-trees
-    Node *OrgChart::find(const std::string &val, Node *currentNode)
+    Node *OrgChart::find(const std::string &val, Node *currentNode) // find a node by name
     {
         if (currentNode == nullptr)
         {
             return nullptr;
         }
-        if (currentNode->_value == val)
+        if (currentNode->_value == val) // if we found the node
         {
             return currentNode;
         }
         for (Node *node : currentNode->_children)
         {
-            Node *found = find(val, node);
+            Node *found = find(val, node); // recursive call on each child
             if (found != nullptr)
             {
                 return found;
@@ -103,15 +103,15 @@ namespace ariel
     {
         if (this->_root == nullptr)
         {
-            this->_root = new Node(val);
+            this->_root = new Node(val); // create new root
         }
-        this->_root->_value = val;
+        this->_root->_value = val; // if the root already exists, change its value
         return *this;
     }
 
     OrgChart &OrgChart::add_sub(const string & parent, const string & sub)
     {
-        Node *parentNode = find(parent);
+        Node *parentNode = find(parent); // make sure the parent is in the chart
         if (parentNode == nullptr)
         {
             throw std::invalid_argument("First value is not in the chart");
